@@ -2,7 +2,7 @@ Follow the steps below to install requirements.
 
 # 0. virtual environment
 
-> virtualenv -p /usr/bin/python3.4 ML
+> virtualenv -p /usr/bin/python3.4 ML \
 > source ML/bin/activate
 
 @@@ Optional
