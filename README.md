@@ -19,8 +19,8 @@ Download spark-2.1.0-bin-hadoop2.7.tgz at http://spark.apache.org/downloads.html
 > ln -s /srv/spark-2.1.0 /srv/spark 
 > vim ~/.bashrc
 
-export SPARK_HOME=/srv/spark
-export PATH=$SPARK_HOME/bin:$PATH
+$export SPARK_HOME=/srv/spark
+$export PATH=$SPARK_HOME/bin:$PATH
 
 > source ~/.bashrc
 
