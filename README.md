@@ -15,6 +15,7 @@ Follow the steps below to install requirements.
 Download spark-2.1.0-bin-hadoop2.7.tgz at http://spark.apache.org/downloads.html
 
 > tar -xzf spark-2.1.0-bin-hadoop2.7.tgz \ 
+> mkdir /srv
 > mv spark-2.1.0-bin-hadoop2.7 /srv/spark-2.1.0 \
 > ln -s /srv/spark-2.1.0 /srv/spark \
 > vim ~/.bashrc
