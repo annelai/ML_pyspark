@@ -87,7 +87,7 @@ def main(sc):
                 .map(lambda row: LabeledPoint(row.y, MLLibVectors.fromML(row.features))))
     m = SVMWithSGD.train(train_dd)
     m.predict(train_d)
-    predictionAndLabels = train_d.rdd.map(lambda lp: (float(m.predict(lp.features)), lp.y))
+    predictionAndLabels = train_d.rdd.map(lambda lp: (float(m.predict(MLLibVectors.sparse(lp.features))), lp.y))
     # Grid search for best params and model
     # scores = {}
     # max_score = 0
