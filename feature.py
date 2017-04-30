@@ -1,18 +1,22 @@
 import utils
 import datetime
+import gensim
 from textblob import TextBlob
 
+meta = utils.load("dicts/meta.p")
 user = utils.load("dicts/user.p")
 store = utils.load("dicts/store.p")
 reviews = utils.load("dicts/reviews.p")
 store_review = utils.load("dicts/store_review.p")
 store_user = utils.load("dicts/store_user.p")
 
+model = gensim.models.KeyedVectors.load_word2vec_format('word2vec/GoogleNews-vectors-negative300.bin', binary=True)
+
 def get_city(b_id):
     return store[b_id]["city"]
 
 def get_state(b_id):
-    return store[b_id]["state"]
+    return meta['cate_cols']['state']['map'][store[b_id]["state"]]
 
 def get_stars(b_id):
     return store[b_id]["stars"]
@@ -43,6 +47,25 @@ def get_PosNeg_score(b_id):
         neg /= neg_len
 
     return [pos, neg]
+
+def get_clarity(b_id):
+
+    tmp_sum = 0.0
+    count = 0.0
+
+    if not store[b_id]['categories']:
+        return [0.5, 1]
+    else:
+        for each in store[b_id]['categories']:
+            try:
+                tmp_sum += model.similarity(each, store[b_id]['name'])
+                count += 1
+            except:
+                pass
+        if count:
+            return [tmp_sum/count, 0]
+        else:
+            return [0.5, 1]
 
 def get_name_polar(b_id):
     pattern = TextBlob(store[b_id]["name"])
