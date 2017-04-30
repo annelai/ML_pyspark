@@ -5,9 +5,9 @@ import numpy
 from textblob import TextBlob
 
 from feature import *
-import model
-import config
-import CrossValidator
+# import model
+# import config
+# import CrossValidator
 
 from pyspark import SparkConf, SparkContext, SQLContext
 # from pyspark.sql import Row
@@ -17,6 +17,9 @@ from pyspark.ml.feature import OneHotEncoder
 from pyspark.ml.feature import VectorAssembler
 from pyspark.mllib.evaluation import BinaryClassificationMetrics, MulticlassMetrics
 
+
+from pyspark.mllib.classification import LogisticRegressionWithSGD, SVMWithSGD
+from pyspark.mllib.regression import LabeledPoint
 
 def main(sc):
 
@@ -69,27 +72,32 @@ def main(sc):
     output = assembler.transform(encoded)
     output.show(5)
 
-    train = output
-    test = output
+    train_d = output
+    test_d = output
 
+
+    train_dd = train_d.map(lambda lp: LabeledPoint(row.y, row.features))
+    m = SVMWithSGD.train(train_dd)
+    m.predict(train_d)
+    predictionAndLabels = train_d.map(lambda lp: (float(m.predict(lp.features)), lp.y))
     # Grid search for best params and model
-    scores = {}
-    max_score = 0
-    for m in model_list:
-        print ('run', m)
-        evaluator = BinaryClassificationEvaluator()
-        cv = CrossValidator(estimator=model_list[m],
-                    estimatorParamMaps=params_list[m],
-                    evaluator=evaluator,
-                    numFolds=3)
-        cv.fit(train)
-        scores[m] = cv.get_best_score()
-        if scores[m] > max_score:
-            op_params = params_list[m][cv.get_best_index()]
-            op_model = cv.get_best_model()
-            op_m_name = m
+    # scores = {}
+    # max_score = 0
+    # for m in model_list:
+    #     print ('run', m)
+    #     evaluator = BinaryClassificationEvaluator()
+    #     cv = CrossValidator(estimator=model_list[m],
+    #                 estimatorParamMaps=params_list[m],
+    #                 evaluator=evaluator,
+    #                 numFolds=3)
+    #     cv.fit(train)
+    #     scores[m] = cv.get_best_score()
+    #     if scores[m] > max_score:
+    #         op_params = params_list[m][cv.get_best_index()]
+    #         op_model = cv.get_best_model()
+    #         op_m_name = m
 
-    predictionAndLabels = test.map(lambda lp: (float(op_model.predict(lp.features)), lp.y))
+    # predictionAndLabels = test.map(lambda lp: (float(op_model.predict(lp.features)), lp.y))
 
     # Instantiate metrics object
     bi_metrics = BinaryClassificationMetrics(predictionAndLabels)
