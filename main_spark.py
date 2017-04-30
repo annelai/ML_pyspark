@@ -21,6 +21,8 @@ from pyspark.mllib.evaluation import BinaryClassificationMetrics, MulticlassMetr
 from pyspark.mllib.classification import LogisticRegressionWithSGD, SVMWithSGD
 from pyspark.mllib.regression import LabeledPoint
 
+from pyspark.ml.linalg import Vectors, VectorUDT
+
 def main(sc):
 
     train_id = utils.load("data_id/train.p")
@@ -41,7 +43,7 @@ def main(sc):
     popularity = udf(lambda b_id: get_popularity(b_id), IntegerType())
     name_size = udf(lambda b_id: get_name_size(b_id), IntegerType())
     name_polar = udf(lambda b_id: get_name_polar(b_id), FloatType())
-    pos_neg_score = udf(lambda b_id: get_PosNeg_score(b_id), ArrayType(FloatType()))
+    pos_neg_score = udf(lambda b_id: Vectors.dense(get_PosNeg_score(b_id)), VectorUDT())
     # clarity = udf(lambda b_id: get_clarity(b_id), ArrayType(FloatType()))
     elite_cnt = udf(lambda b_id: get_elite_cnt(b_id), IntegerType())
     label = udf(lambda b_id: get_y(b_id), IntegerType())
@@ -66,7 +68,7 @@ def main(sc):
 
     # Assemble columns to features
     assembler = VectorAssembler(
-    inputCols=["stateVec","stars","popularity","name_size","name_polar","pos_neg_score","clarity","elite_cnt"],
+    inputCols=["stateVec","stars","popularity","name_size","name_polar","pos_neg_score","elite_cnt"],
     outputCol="features")
 
     output = assembler.transform(encoded)
