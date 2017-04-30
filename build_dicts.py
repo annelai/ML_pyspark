@@ -163,7 +163,7 @@ def store_user_review(observe_t=12):
 #         pickle.dump(store_review, f)
 
 
-def meta():
+def meta(biz_ids):
     cate_cols = ['city', 'state']
     meta = {}
     meta['cate_cols'] = {}
@@ -173,9 +173,9 @@ def meta():
 
     store = utils.load("dicts/store.p")
 
-    for business_id in store:
+    for biz_id in biz_ids:
         for cate_col in cate_cols:
-            category = store[business_id][cate_col]
+            category = store[biz_id][cate_col]
             if category in meta['cate_cols'][cate_col]['map']:
                 continue
             else:

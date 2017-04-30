@@ -16,7 +16,13 @@ def get_city(b_id):
     return store[b_id]["city"]
 
 def get_state(b_id):
-    return meta['cate_cols']['state']['map'][store[b_id]["state"]]
+    stateVec = [0]*meta["cate_cols"]["state"]["num"]
+    state = store[b_id]["state"]
+    if state in meta["cate_cols"]["state"]["map"]:
+        stateVec[meta["cate_cols"]["state"]["map"][state]] = 1
+    else:
+        stateVec[-1] = 1
+    return stateVec
 
 def get_stars(b_id):
     return store[b_id]["stars"]
