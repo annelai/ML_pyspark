@@ -5,7 +5,8 @@ import numpy
 from textblob import TextBlob
 
 from feature import *
-from model import *
+import model
+import config
 import CrossValidator
 
 from pyspark import SparkConf, SparkContext, SQLContext
