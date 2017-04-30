@@ -20,8 +20,11 @@ from pyspark.mllib.evaluation import BinaryClassificationMetrics, MulticlassMetr
 
 from pyspark.mllib.classification import LogisticRegressionWithSGD, SVMWithSGD
 from pyspark.mllib.regression import LabeledPoint
+from pyspark.sql.functions import col
 
 from pyspark.ml.linalg import Vectors, VectorUDT
+from pyspark.mllib.regression import LabeledPoint
+
 
 def main(sc):
 
@@ -77,11 +80,12 @@ def main(sc):
     train_d = output
     test_d = output
 
-
-    train_dd = train_d.map(lambda lp: LabeledPoint(row.y, row.features))
+    train_dd = (train_d.select(col("y"), col("features")) \
+                .rdd \
+                .map(lambda row: LabeledPoint(row.y, row.features)))
     m = SVMWithSGD.train(train_dd)
     m.predict(train_d)
-    predictionAndLabels = train_d.map(lambda lp: (float(m.predict(lp.features)), lp.y))
+    predictionAndLabels = train_d.rdd.map(lambda lp: (float(m.predict(lp.features)), lp.y))
     # Grid search for best params and model
     # scores = {}
     # max_score = 0
