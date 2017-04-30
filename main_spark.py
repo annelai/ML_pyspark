@@ -51,7 +51,7 @@ def main(sc):
     pos_neg_score = udf(lambda b_id: MLVectors.dense(get_PosNeg_score(b_id)), VectorUDT())
     # clarity = udf(lambda b_id: get_clarity(b_id), ArrayType(FloatType()))
     elite_cnt = udf(lambda b_id: get_elite_cnt(b_id), IntegerType())
-    label = udf(lambda b_id: get_y(b_id), IntegerType())
+    label = udf(lambda b_id: get_y(b_id), FloatType())
 
     # Generate feature columns
     # data_f = data_f.withColumn("city", city(data_f['biz_id']))
