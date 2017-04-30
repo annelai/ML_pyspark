@@ -79,6 +79,8 @@ def main(sc):
     output = assembler.transform(encoded)
     output.show(5)
 
+    output = output.loc[output['y'] != -1]
+
     train_d = output
     test_d = output
 
