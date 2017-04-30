@@ -42,7 +42,7 @@ def main(sc):
     name_size = udf(lambda b_id: get_name_size(b_id), IntegerType())
     name_polar = udf(lambda b_id: get_name_polar(b_id), FloatType())
     pos_neg_score = udf(lambda b_id: get_PosNeg_score(b_id), ArrayType(FloatType()))
-    clarity = udf(lambda b_id: get_clarity(b_id), ArrayType(FloatType()))
+    # clarity = udf(lambda b_id: get_clarity(b_id), ArrayType(FloatType()))
     elite_cnt = udf(lambda b_id: get_elite_cnt(b_id), IntegerType())
     label = udf(lambda b_id: get_y(b_id), IntegerType())
 
@@ -54,7 +54,7 @@ def main(sc):
     data_f = data_f.withColumn("name_size", name_size(data_f['biz_id']))
     data_f = data_f.withColumn("name_polar", name_polar(data_f['biz_id']))
     data_f = data_f.withColumn("pos_neg_score", pos_neg_score(data_f['biz_id']))
-    data_f = data_f.withColumn("clarity", clarity(data_f['biz_id']))
+    # data_f = data_f.withColumn("clarity", clarity(data_f['biz_id']))
     data_f = data_f.withColumn("elite_cnt", elite_cnt(data_f['biz_id']))
     data_f = data_f.withColumn("y", label(data_f['biz_id']))
     data_f.show(5)
